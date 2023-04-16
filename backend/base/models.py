@@ -192,6 +192,10 @@ class Brand(models.Model):
     def __str__(self):
         return self.persianName
 
+    class Meta:
+        verbose_name = 'برند'
+        verbose_name_plural = 'برندها'
+    
     objects = BrandManager()
 
 
@@ -204,6 +208,10 @@ class Color(models.Model):
 
     def __str__(self):
         return self.persianName
+
+    class Meta:
+        verbose_name = 'رنگ'
+        verbose_name_plural = 'رنگ‌ها'
 
     objects = ColorManager()
 
@@ -228,7 +236,7 @@ class Category(models.Model):
 
     class Meta:
         unique_together = ('slug', 'parent',)
-        verbose_name_plural = "دسته بندی ها"
+        verbose_name_plural = "دسته‌بندی‌ها"
 
     def save(self, *args, **kwargs):
         full_path = [self.title]
@@ -276,6 +284,10 @@ class GalleryProduct(models.Model):
     def __str__(self):
         return self.name
     
+    class Meta:
+        verbose_name = 'تصویر'
+        verbose_name_plural = 'گالری تصاویر'
+    
 class Product(models.Model):
     user = models.ForeignKey(
         User, on_delete=models.SET_NULL, null=True, verbose_name="کاربر")
@@ -321,7 +333,7 @@ class Product(models.Model):
     createdAt = models.DateTimeField(
         auto_now_add=True, verbose_name="ایجاد شده در")
     _id = models.AutoField(primary_key=True, editable=False)
-
+            
     @property
     def jCreatedAt(self):
         return jalali_converter(self.createdAt)
@@ -343,13 +355,19 @@ class Product(models.Model):
             result = (self.discountless_price - self.price) / \
                 (self.discountless_price) * 100
             self.discountPrice = result
-            print('if')
         else:
             self.discountPrice = 0
-            print('else')
 
+        if self.countInStock == 0:
+            print('hello')
+            self.is_active = False
+        
         super(Product, self).save(*args, **kwargs)
 
+    class Meta:
+        verbose_name = 'محصول'
+        verbose_name_plural = 'محصولات'
+        
     objects = ProductManager()
 
 
@@ -370,7 +388,11 @@ class Review(models.Model):
     def __str__(self):
         return str(self.rating)
 
-
+    class Meta:
+        verbose_name = 'دیدگاه'
+        verbose_name_plural = 'دیدگاه‌ها'
+        
+        
 class Order(models.Model):
     user = models.ForeignKey(
         User, on_delete=models.SET_NULL, null=True, verbose_name="کابر")
@@ -400,7 +422,11 @@ class Order(models.Model):
 
     def __str__(self):
         return str(self.createdAt)
-
+    class Meta:
+            verbose_name = 'سفارش'
+            verbose_name_plural = 'سفارش‌ها'
+        
+        
 
 class OrderItem(models.Model):
     product = models.ForeignKey(
@@ -420,6 +446,7 @@ class OrderItem(models.Model):
     def __str__(self):
         return str(self.name)
 
+    
 
 class ShippingAddress(models.Model):
     order = models.OneToOneField(
@@ -436,7 +463,9 @@ class ShippingAddress(models.Model):
 
     def __str__(self):
         return str(self.address)
-
+    class Meta:
+        verbose_name = 'آدرس'
+        verbose_name_plural = 'آدرس‌ها'
 
 class ProductListByUser(models.Model):
     LIST_NAME = [
@@ -456,5 +485,9 @@ class ProductListByUser(models.Model):
 
     def __str__(self):
         return str(f'{self.user} ----- {self.product.name}')
+
+    class Meta:
+        verbose_name = 'لیست'
+        verbose_name_plural = 'لیست های کاربران'
 
     objects = ProductListManager()

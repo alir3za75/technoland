@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ["http://127.0.0.1:8000", "http://127.0.0.1:3000"]
 # Application definition
 
 INSTALLED_APPS = [
+    "admin_persian",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
